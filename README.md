@@ -1,6 +1,12 @@
-# Common Utilities
+# Dolphin V3 Common Utilities
 
 A reusable Django utility package designed to centralize common functionality
+for Dolphin V3 modules, including:
+
+- Bloodbank  
+- DartaChalani  
+- Housekeeping  
+- Pharmacy  
 
 This package allows you to avoid code duplication and ensures consistent behavior across projects.
 
@@ -53,20 +59,20 @@ This package allows you to avoid code duplication and ensures consistent behavio
 For public repo:
 
 ```bash
-pip install git+https://github.com/shree-dhimal/django-core-auth-setup.git
+pip install git+https://gitea.mavorion.com/sdhimal/dolphin-v3-common-utils.git
 ```
 
 For private repo:
 
 ```bash
-pip install git+https://<USERNAME>:<TOKEN>git@github.com:shree-dhimal/django-core-auth-setup.git
+pip install git+https://gitea.mavorion.com/sdhimal/dolphin-v3-common-utils.git
 ```
 ---
 
 ### 2. Add to `requirements.txt`
 
 ```txt
-dolphin-v3-common-utils @ git+https://github.com/shree-dhimal/django-core-auth-setup.git
+dolphin-v3-common-utils @ git+https://gitea.mavorion.com/sdhimal/dolphin-v3-common-utils.git
 
 ```
 
@@ -83,7 +89,7 @@ pip install -r requirements.txt
 Whenever you push updates to the common utils repository:
 
 ```bash
-pip install --upgrade dolphin-v3-common-utils @ git+https://github.com/shree-dhimal/django-core-auth-setup.git
+pip install --upgrade dolphin-v3-common-utils @ git+https://gitea.mavorion.com/sdhimal/dolphin-v3-common-utils.git
 ```
 
 ---
