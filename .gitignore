@@ -1,0 +1,23 @@
+.history
+.vscode
+static
+*.pyc
+# **/migrations/
+**/__pycache__/
+/__pycache__/
+media/
+mediafiles/
+**/log/
+**/staticfiles/
+**/venv/
+/venv/
+*.ini
+.env
+.env.prod
+*.sqlite3
+pdfs/
+# db1.sqlite3
+# .db1.sqlite3
+
+.idea/
+.DS_Store
