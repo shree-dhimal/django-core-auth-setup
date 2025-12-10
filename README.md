@@ -1,12 +1,6 @@
-# Dolphin V3 Common Utilities
+# Common Utilities
 
 A reusable Django utility package designed to centralize common functionality
-for Dolphin V3 modules, including:
-
-- Bloodbank  
-- DartaChalani  
-- Housekeeping  
-- Pharmacy  
 
 This package allows you to avoid code duplication and ensures consistent behavior across projects.
 
