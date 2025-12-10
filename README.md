@@ -213,13 +213,6 @@ dolphin_v3/
 
 ---
 
-## 📄 License
-
-Private and proprietary.  
-All rights reserved © Shreeram Dhimal
-
----
-
 ## 📬 Support
 
 Contact: Shree Dhimal  
