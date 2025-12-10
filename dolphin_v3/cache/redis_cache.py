@@ -3,7 +3,7 @@ from django_redis import get_redis_connection
 class RedisClient:
     """
     Wrapper over django_redis connection with common helpers.
-    from common_core.cache.client import redis_client
+    from common_core.cache.redis_cache import redis_client
             redis_client.set("count", 10)
             value = redis_client.get("count")
     """

@@ -1,4 +1,4 @@
-from django.core.cache import cache
+from cache.redis_cache import redis_client
 from django.contrib.auth.models import  Group, Permission
 from django.contrib.auth.models import AnonymousUser
 
@@ -55,7 +55,9 @@ class PermissionUtils:
         cache_key = f"user_perm:{self.user.id}:{self.model._meta.model_name.lower()}:{action}"
 
         # Try to get cached result
-        cached_result = cache.get(cache_key)
+        cached_result = redis_client.get(cache_key)
+            
+        # cached_result = cache.get(cache_key)
         if cached_result is not None:
             return cached_result
 
@@ -68,7 +70,7 @@ class PermissionUtils:
                 has_perm = True
                 break
 
-        cache.set(cache_key, has_perm, timeout=300)  # 300 seconds = 5 minutes
+        redis_client.set(cache_key, has_perm, ttl=300)  # 300 seconds = 5 minutes
 
         return has_perm
     
