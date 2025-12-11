@@ -1,9 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from django.conf import settings
 
 
 class BaseModel(models.Model):
@@ -70,12 +68,12 @@ class BaseAuditModelMixin(BaseModel):
     created_by: The user that created the record.
     updated_by: The user that updated the record.
     """
-    created_by = models.ForeignKey(User,
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.DO_NOTHING, null=True, blank=True,
         related_name='%(class)s_created_by',
         help_text="Foreign key referencing the user who created the record."
     )
-    updated_by = models.ForeignKey(User,
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL,
         on_delete=models.DO_NOTHING, null=True, blank=True,
         related_name='%(class)s_updated_by',
         help_text="Foreign key referencing the user who updated the record."
@@ -95,7 +93,7 @@ class SoftDeleteModelMixin(BaseModel):
     deleted_at = models.DateTimeField(null=True, blank=True)
     restored_at = models.DateTimeField(null=True, blank=True)
     deleted_by = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.DO_NOTHING,
         null=True,
         blank=True,
@@ -103,7 +101,7 @@ class SoftDeleteModelMixin(BaseModel):
         related_name="%(class)s_deleted_by"
     )
     restored_by = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.DO_NOTHING,
         null=True,
         blank=True,
