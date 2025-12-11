@@ -6,8 +6,8 @@ from django.views.decorators.csrf import csrf_protect
 from rest_framework import status, viewsets
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 
-from response.mixins import  ResponseHandlerMixin
-from users.permissions import PermissionUtils
+from dolphin_v3.response.mixins import  ResponseHandlerMixin
+from dolphin_v3.users.permissions import PermissionUtils
 
 
 class AbstractViewSet(

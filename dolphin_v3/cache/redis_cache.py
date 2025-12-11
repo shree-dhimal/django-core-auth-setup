@@ -9,7 +9,11 @@ class RedisClient:
     """
 
     def __init__(self, alias="default"):
-        self.conn = get_redis_connection(alias)
+        self.alias = alias
+        
+    @property
+    def conn(self):
+        return get_redis_connection(self.alias)
 
     def set(self, key, value, ttl=None):
         self.conn.set(key, value, ex=ttl)
@@ -33,4 +37,10 @@ class RedisClient:
         return self.conn.ping()
 
 
-redis_client = RedisClient()
+redis_client = None
+
+def get_redis_client(alias="default"):
+    global redis_client
+    if redis_client is None:
+        redis_client = RedisClient(alias)
+    return redis_client

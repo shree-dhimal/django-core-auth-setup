@@ -8,7 +8,7 @@ import rest_framework.exceptions
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.response import Response
 
-from users.permissions import PermissionUtils
+from dolphin_v3.users.permissions import PermissionUtils
 
 
 class ResponseHandlerMixin:

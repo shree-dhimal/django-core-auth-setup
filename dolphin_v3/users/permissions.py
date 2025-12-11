@@ -1,4 +1,4 @@
-from cache.redis_cache import redis_client
+from dolphin_v3.cache.redis_cache import redis_client
 from django.contrib.auth.models import  Group, Permission
 from django.contrib.auth.models import AnonymousUser
 
