@@ -93,6 +93,10 @@ pip install --upgrade dolphin-v3-common-utils @ git+https://gitea.mavorion.com/s
 ```
 
 ---
+## 📦 Uninstalling
+```
+pip uninstall dolphin_v3_common
+```
 
 ## 📝 Usage
 

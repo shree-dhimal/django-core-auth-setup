@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="common-core",
-    version="0.1.3",
+    name="dolphin_v3_common",
+    version="0.1.4",
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
