@@ -1,4 +1,4 @@
-from dolphin_v3.cache.redis_cache import redis_client
+from dolphin_v3.cache.redis_cache import get_redis_client
 from django.contrib.auth.models import  Group, Permission
 from django.contrib.auth.models import AnonymousUser
 
@@ -54,8 +54,11 @@ class PermissionUtils:
         # Create a cache key based on user id, model name, and action
         cache_key = f"user_perm:{self.user.id}:{self.model._meta.model_name.lower()}:{action}"
 
+        try:
         # Try to get cached result
-        cached_result = redis_client.get(cache_key)
+            cached_result = get_redis_client("default").get(cache_key)
+        except Exception as e:
+            cached_result = None
             
         # cached_result = cache.get(cache_key)
         if cached_result is not None:
@@ -69,9 +72,12 @@ class PermissionUtils:
             if group.permissions.filter(codename=required_permission).exists():
                 has_perm = True
                 break
-
-        redis_client.set(cache_key, has_perm, ttl=300)  # 300 seconds = 5 minutes
-
+        try:
+            # Cache the result for future use
+            get_redis_client("default").set(cache_key, has_perm, ttl=300)  # 300 seconds = 5 minutes
+        except Exception as e:
+            pass
+        
         return has_perm
     
     def get_user_all_permissions(self):
