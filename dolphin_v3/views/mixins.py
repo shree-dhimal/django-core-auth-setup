@@ -67,7 +67,7 @@ class AbstractViewSet(
         except Exception as e:
             return self.exception_response(e)
 
-    @method_decorator(csrf_protect)
+    # @method_decorator(csrf_protect)
     def create(self, request, *args, **kwargs):
         try:
             serializer = self.get_serializer(data=request.data)
@@ -108,7 +108,7 @@ class AbstractViewSet(
         except Exception as e:
             return self.exception_response(e)
 
-    @method_decorator(csrf_protect)
+    # @method_decorator(csrf_protect)
     def update(self, request, *args, **kwargs):
         try:
             partial = kwargs.pop("partial", False)
@@ -137,7 +137,7 @@ class AbstractViewSet(
         except Exception as e:
             return self.exception_response(e)
 
-    @method_decorator(csrf_protect)
+    # @method_decorator(csrf_protect)
     def destroy(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
