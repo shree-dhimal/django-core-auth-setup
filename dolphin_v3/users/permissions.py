@@ -1,3 +1,4 @@
+from collections import defaultdict
 from dolphin_v3.cache.redis_cache import get_redis_client
 from django.contrib.auth.models import  Group, Permission
 from django.contrib.auth.models import AnonymousUser
@@ -125,11 +126,45 @@ class PermissionUtils:
     @staticmethod
     def get_all_permissions():
         '''
-        Static method to get all permissions in the system.
-        :return: Set of all permission codenames
+        Get all permissions grouped by model name.
+        :return: dict
         '''
-        all_permissions = Permission.objects.values_list('codename','content_type__model', flat=False)
-        return set(all_permissions)
+        if get_redis_client("default") is not None:
+            cache_key = "all_permissions_dict"
+            try:
+                cached_permissions = get_redis_client("default").get(cache_key)
+                if cached_permissions is not None:
+                    return cached_permissions
+            except Exception as e:
+                pass
+            
+        permissions = Permission.objects.select_related(
+            "content_type"
+        ).values(
+            "id",
+            "name",
+            "codename",
+            "content_type__model",
+        )
+
+        result = defaultdict(list)
+
+        for perm in permissions:
+            model_name = perm["content_type__model"]
+
+            result[model_name].append({
+                "id": perm["id"],
+                "name": perm["name"],
+                "code": perm["codename"],
+            })
+        cache_key = "all_permissions_dict"
+        try:
+            get_redis_client("default").set(cache_key, dict(result), ttl=3600)  # Cache for 1 hour
+        except Exception as e:
+            pass
+
+
+        return dict(result)
     
     
 class CustomPermissionClass(BasePermission):
