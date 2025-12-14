@@ -128,7 +128,8 @@ class PermissionUtils:
         Static method to get all permissions in the system.
         :return: Set of all permission codenames
         '''
-        return set(Permission.objects.values_list('codename', flat=True))
+        all_permissions = Permission.objects.values_list('codename','content_type__model', flat=False)
+        return set(all_permissions)
     
     
 class CustomPermissionClass(BasePermission):
