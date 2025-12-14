@@ -7,6 +7,8 @@ from django.urls import resolve
 from rest_framework.permissions import BasePermission
 from django.core.exceptions import ImproperlyConfigured
 from rest_framework.exceptions import PermissionDenied
+from django.db import transaction
+from django.core.exceptions import ValidationError
 
 class PermissionUtils:
     '''
@@ -219,17 +221,47 @@ class PermissionUtils:
         return result
     
     @staticmethod
-    def create_group_with_permissions(group_name, permission_codenames):
-        '''
-        Create a new group with the specified permissions.
-        :param group_name: Name of the group
-        :param permission_codenames: List of permission codenames
-        :return: Group instance
-        '''
-        group, created = Group.objects.get_or_create(name=group_name)
-        permissions = Permission.objects.filter(codename__in=permission_codenames)
-        group.permissions.set(permissions)
-        group.save()
+    @transaction.atomic
+    def create_group_with_permissions(
+        group_name,
+        permission_codenames,
+        app_label=None,
+        replace=True,
+    ):
+        """
+        Create or update a group with specified permissions.
+
+        :param group_name: str
+        :param permission_codenames: list[str]
+        :param app_label: optional Django app label (recommended)
+        :param replace: if True, replaces existing permissions; else adds
+        :return: Group
+        """
+
+        group, _ = Group.objects.get_or_create(name=group_name)
+
+        permission_qs = Permission.objects.filter(
+            codename__in=permission_codenames
+        )
+
+        if app_label:
+            permission_qs = permission_qs.filter(
+                content_type__app_label=app_label
+            )
+
+        found = set(permission_qs.values_list("codename", flat=True))
+        missing = set(permission_codenames) - found
+
+        if missing:
+            raise ValidationError(
+                f"Invalid permission codenames: {', '.join(missing)}, Please Add valid permission codenames."
+            )
+
+        if replace:
+            group.permissions.set(permission_qs)
+        else:
+            group.permissions.add(*permission_qs)
+
         return group
 
     @staticmethod   
