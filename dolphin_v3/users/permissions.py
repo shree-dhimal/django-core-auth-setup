@@ -218,6 +218,20 @@ class PermissionUtils:
 
         return result
     
+    @staticmethod
+    def create_group_with_permissions(group_name, permission_codenames):
+        '''
+        Create a new group with the specified permissions.
+        :param group_name: Name of the group
+        :param permission_codenames: List of permission codenames
+        :return: Group instance
+        '''
+        group, created = Group.objects.get_or_create(name=group_name)
+        permissions = Permission.objects.filter(codename__in=permission_codenames)
+        group.permissions.set(permissions)
+        group.save()
+        return group
+    
 class CustomPermissionClass(BasePermission):
     '''
     Custom permission class to check user permissions based on action and model.
