@@ -231,6 +231,20 @@ class PermissionUtils:
         group.permissions.set(permissions)
         group.save()
         return group
+
+    @staticmethod   
+    def assign_group_to_user(user, group_id):
+        '''
+        Assign a group to the user.
+        :param group_name: Name of the group
+        '''
+        try:
+            user.groups.clear()
+            user.groups.set(group_id)
+            user.save()
+            return user.groups.all().values_list('name', flat=True)
+        except Group.DoesNotExist:
+            raise ValueError(f"Group '{group_id}' does not exist.")
     
 class CustomPermissionClass(BasePermission):
     '''
