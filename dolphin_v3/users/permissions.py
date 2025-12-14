@@ -122,6 +122,14 @@ class PermissionUtils:
             permissions.update(group_permissions)
         return permissions
     
+    @staticmethod
+    def get_all_permissions():
+        '''
+        Static method to get all permissions in the system.
+        :return: Set of all permission codenames
+        '''
+        return set(Permission.objects.values_list('codename', flat=True))
+    
     
 class CustomPermissionClass(BasePermission):
     '''
@@ -176,3 +184,14 @@ class CustomPermissionClass(BasePermission):
         except Exception as e:
             raise e
             # return False
+
+class IsSuperUser(BasePermission):
+    '''
+    Custom permission class to allow only superusers.
+    Usage:
+        - permission_classes = [IsSuperUser]
+    '''
+    def has_permission(self, request, view):
+        if not request.user or isinstance(request.user, AnonymousUser):
+            return False
+        return request.user.is_superuser
