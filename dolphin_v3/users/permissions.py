@@ -137,7 +137,7 @@ class PermissionUtils:
                     return cached_permissions
             except Exception as e:
                 pass
-            
+
         permissions = Permission.objects.select_related(
             "content_type"
         ).values(
@@ -166,6 +166,57 @@ class PermissionUtils:
 
         return dict(result)
     
+    @staticmethod
+    def get_all_groups():
+        '''
+        Get all groups with their permissions.
+        :return: dict
+        '''
+        if get_redis_client("default") is not None:
+            cache_key = "all_groups_dict"
+            try:
+                cached_groups = get_redis_client("default").get(cache_key)
+                if cached_groups is not None:
+                    return cached_groups
+            except Exception as e:
+                pass
+
+        groups = Group.objects.prefetch_related("permissions").all()
+
+        result = []
+
+        for group in groups:
+            perms = group.permissions.select_related(
+                "content_type"
+            ).values(
+                "id",
+                "name",
+                "codename",
+                "content_type__model",
+            )
+
+            perm_list = []
+            for perm in perms:
+                perm_list.append({
+                    "id": perm["id"],
+                    "name": perm["name"],
+                    "code": perm["codename"],
+                    "model": perm["content_type__model"],
+                })
+
+            result.append({
+                "id": group.id,
+                "name": group.name,
+                "permissions": perm_list,
+            })
+        
+        cache_key = "all_groups_dict"
+        try:
+            get_redis_client("default").set(cache_key, result, ttl=3600)  # Cache for 1 hour
+        except Exception as e:
+            pass
+
+        return result
     
 class CustomPermissionClass(BasePermission):
     '''
