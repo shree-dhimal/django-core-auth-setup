@@ -31,7 +31,7 @@ class ResponseHandlerMixin:
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.permission_utils = PermissionUtils(self.request.user, self.__class__.__name__)
+        self.permission_utils = None
 
     def success_response(
         self,
@@ -189,6 +189,7 @@ class ResponseHandlerMixin:
         fields=None,
         exclude=None,
     ):
+        self.permission_utils = PermissionUtils(self.request.user, self.__class__.__name__)
         """Handle paginated responses consistently using CustomPagination."""
         try:
             context = context or self.get_serializer_context()
